@@ -2,7 +2,7 @@ import json
 import csv
 import logging
 
-logger = logging.getLogger("Priorization_Pipeline")
+logger = logging.getLogger("Prioritization_Pipeline")
 
 
 def csv_to_json(csv_file_path):

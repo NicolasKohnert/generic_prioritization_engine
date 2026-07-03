@@ -1,7 +1,7 @@
 import json
 import logging
 
-logger = logging.getLogger("Priorization_Pipeline")
+logger = logging.getLogger("Prioritization_Pipeline")
 
 def export_to_geojson(assets, output_path):
     try:

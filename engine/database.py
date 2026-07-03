@@ -2,7 +2,7 @@ import sqlite3
 import os
 import logging
 
-logger = logging.getLogger("Priorization_Pipeline")
+logger = logging.getLogger("Prioritization_Pipeline")
 
 def save_to_sql(assets_dicts, db_path):
     try:

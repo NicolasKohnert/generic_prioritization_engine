@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger("Priorization_Pipeline")
+logger = logging.getLogger("Prioritization_Pipeline")
 
 def calculate_priority(assets, criteria):
     processed_assets = []

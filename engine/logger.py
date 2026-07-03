@@ -16,4 +16,4 @@ def setup_logger():
             logging.StreamHandler()
         ]
     )
-    return logging.getLogger("Priorization_Pipeline")
+    return logging.getLogger("Prioritization_Pipeline")

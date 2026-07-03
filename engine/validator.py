@@ -2,7 +2,7 @@ import logging
 from typing import List, Optional
 from pydantic import BaseModel, Field, ValidationError
 
-logger = logging.getLogger("Priorization_Pipeline")
+logger = logging.getLogger("Prioritization_Pipeline")
 
 
 class Geometry(BaseModel):
