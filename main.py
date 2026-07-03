@@ -12,7 +12,7 @@ from engine.gis_export import export_to_geojson
 logger = setup_logger()
 
 def main():
-    logging.info("Starting processing pipeline.")
+    logger.info("Starting processing pipeline.")
 
     base_path = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(base_path, "config", "settings.yaml")
@@ -27,13 +27,13 @@ def main():
     assets = validate_assets(raw_data)
 
     if not assets:
-        logging.error("No valid assets found. Stopping pipeline.")
+        logger.error("No valid assets found. Stopping pipeline.")
         return
 
     processed_assets = calculate_priority(assets, criteria)
 
     for asset in processed_assets:
-        logging.info(f"Asset ID: {asset.id} - Final Score: {asset.score:.2f}")
+        logger.info(f"Asset ID: {asset.id} - Final Score: {asset.score:.2f}")
         
 
     save_to_sql([a.model_dump() for a in processed_assets], paths["output_db"])

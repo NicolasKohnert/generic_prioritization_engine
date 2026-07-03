@@ -23,10 +23,10 @@ def csv_to_json(csv_file_path):
                     }
                     assets.append(asset)
                 except (ValueError, KeyError) as e:
-                    logging.warning(f"Failed to process row_ {e}")
-        logging.info(f"Successfully loaded {len(assets)} records from {csv_file_path}.")
+                    logger.warning(f"Failed to process row_ {e}")
+        logger.info(f"Successfully loaded {len(assets)} records from {csv_file_path}.")
     except FileNotFoundError:
-        logging.error(f"File not found: {csv_file_path}")
+        logger.error(f"File not found: {csv_file_path}")
     
     return assets
 

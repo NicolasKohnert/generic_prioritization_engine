@@ -21,8 +21,8 @@ def export_to_geojson(assets, output_path):
         with open(output_path, "w") as f:
             json.dump({"type": "FeatureCollection", "features": features},f)
 
-        logging.info(f"Successfully exported {len(features)} features to {output_path}.")
+        logger.info(f"Successfully exported {len(features)} features to {output_path}.")
 
     except Exception as e:
-        logging.error(f"Error during export: {e}")
+        logger.error(f"Error during export: {e}")
 

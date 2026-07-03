@@ -31,9 +31,9 @@ def save_to_sql(assets_dicts, db_path):
                 ))
 
             conn.commit()
-            logging.info(f"Successfully saved {len(assets_dicts)} records to SQLite database")
+            logger.info(f"Successfully saved {len(assets_dicts)} records to SQLite database")
     except sqlite3.Error as e:
-        logging.error(f"Database error: {e}")
+        logger.error(f"Database error: {e}")
 
     finally:
         if conn:
