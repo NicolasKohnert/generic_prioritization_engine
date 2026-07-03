@@ -3,7 +3,7 @@ Asset Prioritization Engine
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.9%2B-brightgreen.svg)
 
 
-This pipeline was developed to automate the priorization of infrastructure assets and make them spatially visualizable. It serves as a bridge between raw CSV data and an intelligent decision-making foundation for BIM and GIS workflows
+This pipeline was developed to automate the prioritization of infrastructure assets and make them spatially visualizable. It serves as a bridge between raw CSV data and an intelligent decision-making foundation for BIM and GIS workflows
 
 
 Objective
@@ -24,9 +24,9 @@ pip install -r requirements.txt
 Usage
 
 The entire project is automated for ease of use.To start the pipeline and initialize the data visualization:
-1. Execute start_gis.bat with a double klick
+1. Execute start_gis.bat with a double click
 2.The pipeline processes the data, updates the database, and automatically starts a web server
-3 Open your browser at http://localhost:8000 to view the atest priorization map
+3 Open your browser at http://localhost:8000 to view the asset prioritization map
 
 
 Project Structure
@@ -47,4 +47,4 @@ Tools: Git, VS Code
 
 Contributing
 
-Contributions are welcome"Feel free to open an issue or submit a pull request.
+Contributions are welcome.Feel free to open an issue or submit a pull request.
