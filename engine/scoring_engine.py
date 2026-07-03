@@ -4,7 +4,7 @@ logger = logging.getLogger("Prioritization_Pipeline")
 
 def calculate_priority(assets, criteria):
     processed_assets = []
-    logger.info(F"Starting priority calculation for {len(assets)} assets.")
+    logger.info(f"Starting priority calculation for {len(assets)} assets.")
     
     for asset in assets:
         try:
