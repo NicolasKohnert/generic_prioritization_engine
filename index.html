@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Asset Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; display: flex; height: 100vh; font-family: sans-serif; }
+        #sidebar { width: 300px; padding: 20px; background: #f4f4f4; border-right: 1px solid #ccc; overflow-y: auto; }
+        #map { flex-grow: 1; }
+        .stat-card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h2>Asset Overview</h2>
+    <div class="stat-card">
+        <h3>Total Assets</h3>
+        <p id="total-count">Loading...</p>
+    </div>
+    <div class="stat-card">
+        <h3>High Priority (> 0.8)</h3>
+        <p id="high-priority-count">Loading...</p>
+    </div>
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map').setView([58.97, 5.73], 13); // Stavanger
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    // Hier würdest du später dein GeoJSON laden
+    fetch('data/map_data.geojson')
+        .then(response => response.json())
+        .then(data => {
+            L.geoJSON(data).addTo(map);
+           
+            // Beispiel: Statistik berechnen
+            const total = data.features.length;
+            const highPri = data.features.filter(f => f.properties.score > 0.8).length;
+           
+            document.getElementById('total-count').innerText = total;
+            document.getElementById('high-priority-count').innerText = highPri;
+        });
+</script>
+</body>
+</html>

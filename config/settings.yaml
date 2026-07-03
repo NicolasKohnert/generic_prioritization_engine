@@ -1,0 +1,9 @@
+#Priorizationsettings
+weights:
+    condition: 0.6
+    criticality: 0.4
+    
+paths:
+    input_csv: "data/input_assets.csv"
+    output_db: "data/results.db"
+    output_geojson: "data/map_data.geojson"
