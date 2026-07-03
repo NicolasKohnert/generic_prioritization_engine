@@ -27,7 +27,7 @@ def validate_assets(asset_data_list: List[dict]) -> List[Asset]:
             asset = Asset(**data)
             valid_assets.append(asset)
         except ValidationError as e:
-            logger.error(f"Validation failed for asset {data.get("id", Unknown)}: {e.json()}")
+            logger.error(f"Validation failed for asset {data.get("id", "Unknown")}: {e.json()}")
 
     if len(valid_assets)== len(asset_data_list):
         logger.info("All assets passed validation.")
