@@ -8,10 +8,17 @@ def calculate_priority(assets, criteria):
     
     for asset in assets:
         try:
+
+            max_dmg = criteria["max_damage"]
+            max_freq = criteria["max_usage_frequency"]
+            
             cond_score = asset.parameters.damage_grade * criteria["condition"]
             freq_score = asset.parameters.usage_frequency * criteria["criticality"]
 
-            asset.score =cond_score + freq_score
+            max_possible_score = (max_dmg * criteria["condition"]) + (max_freq * criteria["criticality"])
+            raw_score = cond_score + freq_score
+            
+            asset.score =raw_score/max_possible_score
             processed_assets.append(asset)
 
         except KeyError as e:
