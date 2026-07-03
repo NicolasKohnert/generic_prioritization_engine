@@ -1,6 +1,6 @@
-import os
 import yaml
 import logging
+from pathlib import Path
 
 from engine.logger import setup_logger
 from engine.adapter import csv_to_json
@@ -9,19 +9,22 @@ from engine.scoring_engine import calculate_priority
 from engine.database import save_to_sql
 from engine.gis_export import export_to_geojson
 
+BASE_PATH = Path(__file__).resolve().parent
+
 logger = setup_logger()
 
 def main():
     logger.info("Starting processing pipeline.")
 
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    config_path = os.path.join(base_path, "config", "settings.yaml")
+    config_path = BASE_PATH / "config" / "settings.ymal"
     
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
 
     criteria = config["weights"]
-    paths = config["paths"]
+    bounds = config["bounds"]
+    
+    paths = {key: BASE_PATH / value for key, value in config["paths"].items()}
     
     raw_data = csv_to_json(paths["input_csv"])
     assets = validate_assets(raw_data)
@@ -30,7 +33,7 @@ def main():
         logger.error("No valid assets found. Stopping pipeline.")
         return
 
-    processed_assets = calculate_priority(assets, criteria)
+    processed_assets = calculate_priority(assets, criteria, bounds)
 
     for asset in processed_assets:
         logger.info(f"Asset ID: {asset.id} - Final Score: {asset.score:.2f}")

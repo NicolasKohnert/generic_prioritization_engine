@@ -1,7 +1,9 @@
-#Priorizationsettings
+#Prioritizationsettings
 weights:
     condition: 0.6
     criticality: 0.4
+    
+bounds:
     max_damage: 10.0
     max_usage_frequency: 10.0
     

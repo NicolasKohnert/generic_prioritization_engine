@@ -1,15 +1,16 @@
 import sqlite3
-import os
 import logging
+from contextlib import closing
 
 logger = logging.getLogger("Prioritization_Pipeline")
+
 
 def save_to_sql(assets_dicts, db_path):
     try:
         with closing(sqlite3.connect(db_path)) as conn:
-            with conn:
+            with conn:  # Transaktion: auto-commit bei Erfolg, rollback bei Fehler
                 cursor = conn.cursor()
-        
+
                 cursor.execute("""
                     CREATE TABLE IF NOT EXISTS asset_history (
                         id TEXT,
@@ -17,13 +18,13 @@ def save_to_sql(assets_dicts, db_path):
                         x REAL,
                         y REAL,
                         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-                     )
+                    )
                 """)
 
                 for asset in assets_dicts:
                     cursor.execute("""
                         INSERT INTO asset_history (id, score, x, y)
-                        VALUES (?,?,?,?)
+                        VALUES (?, ?, ?, ?)
                     """, (
                         asset["id"],
                         asset["score"],
