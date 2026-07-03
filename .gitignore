@@ -221,3 +221,7 @@ __marimo__/
 *.db
 *.sqlite3
 *.geojson
+
+#branding
+local_branding.js
+assets/tolic-logo.png
