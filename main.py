@@ -16,7 +16,7 @@ logger = setup_logger()
 def main():
     logger.info("Starting processing pipeline.")
 
-    config_path = BASE_PATH / "config" / "settings.ymal"
+    config_path = BASE_PATH / "config" / "settings.yaml"
     
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
