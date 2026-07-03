@@ -1,7 +1,4 @@
 Asset Prioritization Engine 
-
-markdown
-
 <!-- Badges -->
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.9%2B-brightgreen.svg)
 
