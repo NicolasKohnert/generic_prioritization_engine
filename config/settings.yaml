@@ -3,12 +3,12 @@ criteria:
     -name: condition
      column_name: damage_grade
      weight: 0.6
-     max_damage : 10.0
+     max : 10.0
     
     -name: criticality
      column_name: usage_frequency
      weight: 0.4
-     max_usage : 10.0
+     max : 10.0
     
 paths:
     input_csv: "data/input_assets.csv"
