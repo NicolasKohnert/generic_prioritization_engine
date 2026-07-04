@@ -1,4 +1,4 @@
-id,name,x,y,damage_grade,usage_frequency
+﻿id,name,x,y,damage_grade,usage_frequency
 ST-001,Skolebygg ST-01,5.7520,58.9685,9,8
 ST-002,Svømmehall ST-02,5.7495,58.9660,8,9
 ST-003,Barnehage ST-03,5.7545,58.9705,9,9
