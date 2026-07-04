@@ -11,7 +11,13 @@ def export_to_geojson(assets, output_path):
             
             features.append({
                 "type": "Feature",
-                "properties": {"id": data["id"], "name": data.get("name") or data["id"], "score": data.get("score", 0)},
+                "properties": {
+                    "id": data["id"],
+                    "name": data.get("name") or data["id"],
+                    "score": data.get("score", 0),
+                    "damage_grade": data["parameters"]["damage_grade"],
+                    "usage_frequency": data["parameters"]["usage_frequency"]
+                },
                 "geometry": {
                     "type": "Point",
                     "coordinates": [data["geometry"]["x"], data["geometry"]["y"]]

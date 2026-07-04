@@ -49,6 +49,16 @@
         <div class="stat-main" style="color: #d32f2f;" id="priority-count">--</div>
     </div>
 
+    <div class="stat-card" style="border-left-color: #1565c0;">
+        <h3>What-if: Weighting</h3>
+        <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #777;">
+            <span>Condition</span><span>Criticality</span>
+        </div>
+        <input type="range" id="weightSlider" min="0" max="100" value="60" style="width: 100%;">
+        <div id="weightLabel" style="text-align: center; font-size: 0.9em; font-weight: bold; margin-top: 4px;">60% Condition / 40% Criticality</div>
+        <div style="font-size: 0.75em; color: #999; margin-top: 4px;">Live-Simulation. Configured weights: settings.yaml</div>
+    </div>
+
     <div class="priority-list stat-card">
         <h3>Top 10 High Priority</h3>
         <div id="top-assets-list"></div>
@@ -86,33 +96,78 @@
         return score > 0.8 ? '#d32f2f' : score > 0.5 ? '#fbc02d' : '#388e3c';
     }
 
+    // Muss zur Scoring-Logik in engine/scoring_engine.py passen (Preview-Duplikat)
+    const MAX_DAMAGE = 10, MAX_FREQUENCY = 10;
+    function computeScore(props, wCondition) {
+        const wCriticality = 1 - wCondition;
+        const raw = props.damage_grade * wCondition + props.usage_frequency * wCriticality;
+        const maxPossible = MAX_DAMAGE * wCondition + MAX_FREQUENCY * wCriticality;
+        return maxPossible > 0 ? raw / maxPossible : 0;
+    }
+
+    let geoLayer = null;
+    let allFeatures = [];
+
+    function render(wCondition) {
+        // Scores neu berechnen
+        allFeatures.forEach(f => {
+            f.properties.score = computeScore(f.properties, wCondition);
+        });
+
+        // Stat-Cards
+        document.getElementById('total-count').innerText = allFeatures.length;
+        document.getElementById('priority-count').innerText = allFeatures.filter(f => f.properties.score > 0.8).length;
+
+        // Top-10-Liste
+        const sorted = [...allFeatures].sort((a, b) => b.properties.score - a.properties.score).slice(0, 10);
+        const listDiv = document.getElementById('top-assets-list');
+        listDiv.innerHTML = '';
+        sorted.forEach(f => {
+            const safeScore = f.properties.score;
+            const assetLabel = f.properties.name || (f.properties.id ? 'Asset ' + f.properties.id : 'Unbekannt');
+            listDiv.innerHTML += `
+                <div class="asset-item">
+                    <span>${assetLabel}</span>
+                    <span class="asset-score" style="background: ${getColor(safeScore)};">${safeScore.toFixed(2)}</span>
+                </div>`;
+        });
+
+        // Marker einfaerben und Popups aktualisieren
+        if (geoLayer) {
+            geoLayer.eachLayer(layer => {
+                const p = layer.feature.properties;
+                layer.setStyle({ fillColor: getColor(p.score) });
+                layer.setPopupContent(`<b>${p.name || 'Unbekannt'}</b><br>ID: ${p.id || '-'}<br>Score: ${p.score.toFixed(2)}`);
+            });
+        }
+
+        // Label unter dem Slider
+        const pct = Math.round(wCondition * 100);
+        document.getElementById('weightLabel').innerText = `${pct}% Condition / ${100 - pct}% Criticality`;
+    }
+
     fetch('data/map_data.geojson')
         .then(response => response.json())
         .then(data => {
-            document.getElementById('total-count').innerText = data.features.length;
-            document.getElementById('priority-count').innerText = data.features.filter(f => (f.properties.score || 0) > 0.8).length;
+            allFeatures = data.features;
 
-            const sorted = data.features.sort((a, b) => (b.properties.score || 0) - (a.properties.score || 0)).slice(0, 10);
-            const listDiv = document.getElementById('top-assets-list');
-           
-            sorted.forEach(f => {
-                const safeScore = (f.properties.score || 0);
-                const assetLabel = f.properties.name || (f.properties.id ? 'Asset ' + f.properties.id : 'Unbekannt');
-                listDiv.innerHTML += `
-                    <div class="asset-item">
-                        <span>${assetLabel}</span>
-                        <span class="asset-score" style="background: ${getColor(safeScore)};">${safeScore.toFixed(2)}</span>
-                    </div>`;
-            });
-
-            L.geoJSON(data, {
+            geoLayer = L.geoJSON(data, {
                 pointToLayer: function (feature, latlng) {
-                    return L.circleMarker(latlng, { radius: 10, fillColor: getColor(feature.properties.score || 0), color: "#000", weight: 1, fillOpacity: 0.9 });
+                    return L.circleMarker(latlng, { radius: 10, fillColor: '#999', color: "#000", weight: 1, fillOpacity: 0.9 });
                 },
                 onEachFeature: function (feature, layer) {
-                    layer.bindPopup(`<b>${feature.properties.name || 'Unbekannt'}</b><br>ID: ${feature.properties.id || '-'}<br>Score: ${(feature.properties.score || 0).toFixed(2)}`);
+                    layer.bindPopup('');
                 }
             }).addTo(map);
+
+            const slider = document.getElementById('weightSlider');
+            render(slider.value / 100);
+            slider.addEventListener('input', () => render(slider.value / 100));
+        })
+        .catch(err => {
+            document.getElementById('top-assets-list').innerHTML =
+                '<div style="color:#d32f2f;">Keine Daten gefunden. Bitte zuerst die Pipeline ausfuehren (start_gis.bat).</div>';
+            console.error('GeoJSON konnte nicht geladen werden:', err);
         });
 </script>
 </body>
