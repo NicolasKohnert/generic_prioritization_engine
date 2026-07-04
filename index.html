@@ -97,7 +97,7 @@
            
             sorted.forEach(f => {
                 const safeScore = (f.properties.score || 0);
-                const assetLabel = f.properties.id ? 'Asset ' + f.properties.id : 'Unbekannt';
+                const assetLabel = f.properties.name || (f.properties.id ? 'Asset ' + f.properties.id : 'Unbekannt');
                 listDiv.innerHTML += `
                     <div class="asset-item">
                         <span>${assetLabel}</span>
@@ -110,7 +110,7 @@
                     return L.circleMarker(latlng, { radius: 10, fillColor: getColor(feature.properties.score || 0), color: "#000", weight: 1, fillOpacity: 0.9 });
                 },
                 onEachFeature: function (feature, layer) {
-                    layer.bindPopup(`<b>Asset ID: ${feature.properties.id || 'Unbekannt'}</b><br>Score: ${(feature.properties.score || 0).toFixed(2)}`);
+                    layer.bindPopup(`<b>${feature.properties.name || 'Unbekannt'}</b><br>ID: ${feature.properties.id || '-'}<br>Score: ${(feature.properties.score || 0).toFixed(2)}`);
                 }
             }).addTo(map);
         });

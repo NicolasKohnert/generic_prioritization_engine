@@ -17,6 +17,7 @@ class Parameters(BaseModel):
 
 class Asset(BaseModel):
     id: str
+    name: Optional[str] = None
     geometry: Geometry
     parameters: Parameters
     score: Optional[float] = None

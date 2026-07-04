@@ -14,6 +14,7 @@ def csv_to_json(csv_file_path):
                 try:
                     asset = {
                         "id":row["id"],
+                        "name": (row.get("name") or "").strip() or row["id"],
                         "geometry":{"x": float(row["x"]), "y": float(row["y"])},
                         "parameters": {
                             "damage_grade": int(row["damage_grade"]),
