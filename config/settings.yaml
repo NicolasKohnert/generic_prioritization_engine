@@ -1,16 +1,16 @@
 #Prioritization settings
 criteria:
-    -name: condition
-     column_name: damage_grade
-     weight: 0.6
-     max : 10.0
+  - name: condition
+    column_name: damage_grade
+    weight: 0.6
+    max: 10.0
     
-    -name: criticality
-     column_name: usage_frequency
-     weight: 0.4
-     max : 10.0
+  - name: criticality
+    column_name: usage_frequency
+    weight: 0.4
+    max: 10.0
     
 paths:
-    input_csv: "data/input_assets.csv"
-    output_db: "data/results.db"
-    output_geojson: "data/map_data.geojson"
+  input_csv: "data/input_assets.csv"
+  output_db: "data/results.db"
+  output_geojson: "data/map_data.geojson"
