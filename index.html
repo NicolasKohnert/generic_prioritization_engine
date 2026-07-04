@@ -100,7 +100,7 @@
     const MAX_DAMAGE = 10, MAX_FREQUENCY = 10;
     function computeScore(props, wCondition) {
         const wCriticality = 1 - wCondition;
-        const raw = props.damage_grade * wCondition + props.usage_frequency * wCriticality;
+        const raw = props.condition * wCondition + props.criticality * wCriticality;
         const maxPossible = MAX_DAMAGE * wCondition + MAX_FREQUENCY * wCriticality;
         return maxPossible > 0 ? raw / maxPossible : 0;
     }
