@@ -1,6 +1,6 @@
 import logging
-from typing import List, Optional
-from pydantic import BaseModel, Field, ValidationError
+from typing import Dict, Optional
+from pydantic import BaseModel, Field, ValidationError, model_validator
 
 logger = logging.getLogger("Prioritization_Pipeline")
 
@@ -10,32 +10,41 @@ class Geometry(BaseModel):
     y: float
 
 
-class Parameters(BaseModel):
-    damage_grade: int = Field(..., ge=0, le=10)
-    usage_frequency: int
-
-
 class Asset(BaseModel):
     id: str
     name: Optional[str] = None
     geometry: Geometry
-    parameters: Parameters
+    values: Dict[str, float]
     score: Optional[float] = None
 
+    @model_validator(mode="after")
+    def check_values_in_range(self):
+        for name, value in self.values.items():
+            if value < 0:
+                raise ValueError(f"Criterion '{name}' has a negative value: {value}")
+        return self
 
-def validate_assets(asset_data_list: List[dict]) -> List[Asset]:
+
+def validate_assets(asset_data_list, criteria):
     valid_assets = []
 
     if not asset_data_list:
         logger.warning("No asset data to validate.")
         return valid_assets
 
+    expected = {crit["name"] for crit in criteria}
+
     for data in asset_data_list:
         try:
             asset = Asset(**data)
+
+            missing = expected - set(asset.values.keys())
+            if missing:
+                raise ValueError(f"Missing criteria: {missing}")
+            
             valid_assets.append(asset)
-        except ValidationError as e:
-            logger.error(f"Validation failed for asset {data.get('id', 'Unknown')}: {e.json()}")
+        except (ValidationError, ValueError) as e:
+            logger.error(f"Validation failed for asset {data.get('id', 'Unknown')}: {e}")
 
     if len(valid_assets) == len(asset_data_list):
         logger.info("All assets passed validation.")

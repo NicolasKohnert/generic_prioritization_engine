@@ -1,5 +1,4 @@
 import yaml
-import logging
 from pathlib import Path
 
 from engine.logger import setup_logger
@@ -21,19 +20,21 @@ def main():
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
 
-    criteria = config["weights"]
-    bounds = config["bounds"]
+    criteria = config["criteria"]
     
     paths = {key: BASE_PATH / value for key, value in config["paths"].items()}
+
+    for key in ("output_db", "output_geojson"):
+        paths[key].parent.mkdir(parents=True, exist_ok=True)
     
-    raw_data = csv_to_json(paths["input_csv"])
-    assets = validate_assets(raw_data)
+    raw_data = csv_to_json(paths["input_csv"], criteria)
+    assets = validate_assets(raw_data, criteria)
 
     if not assets:
         logger.error("No valid assets found. Stopping pipeline.")
         return
 
-    processed_assets = calculate_priority(assets, criteria, bounds)
+    processed_assets = calculate_priority(assets, criteria)
 
     for asset in processed_assets:
         logger.info(f"Asset ID: {asset.id} - Final Score: {asset.score:.2f}")

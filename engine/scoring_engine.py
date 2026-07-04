@@ -3,26 +3,31 @@ import logging
 logger = logging.getLogger("Prioritization_Pipeline")
 
 
-def calculate_priority(assets, criteria, bounds):
+def calculate_priority(assets, criteria):
     processed_assets = []
     logger.info(f"Starting priority calculation for {len(assets)} assets.")
 
     for asset in assets:
         try:
-            max_dmg = bounds["max_damage"]
-            max_freq = bounds["max_usage_frequency"]
+            raw_score = 0.0
+            max_possible_score= 0.0
 
-            cond_score = asset.parameters.damage_grade * criteria["condition"]
-            freq_score = asset.parameters.usage_frequency * criteria["criticality"]
+            for crit in criteria:
+                name = crit["name"]
+                weight = crit["weight"]
+                max_value = crit["max"]
 
-            max_possible_score = (max_dmg * criteria["condition"]) + (max_freq * criteria["criticality"])
-            raw_score = cond_score + freq_score
+                raw_score += asset.values[name] * weight
+                max_possible_score += max_value * weight
+
 
             asset.score = raw_score / max_possible_score
             processed_assets.append(asset)
 
         except KeyError as e:
             logger.error(f"Missing config key while scoring asset {asset.id}: {e}")
+        except ZeroDivisionError as e:
+            logger.error(f"Max possible score is zero for asset {asset.id} - check weights/max in config")            
         except Exception as e:
             logger.error(f"Unexpected error calculating score for asset {asset.id}: {e}")
 
