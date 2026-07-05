@@ -159,6 +159,7 @@
                     layer.bindPopup('');
                 }
             }).addTo(map);
+			map.fitBounds(geoLayer.getBounds());
 
             const slider = document.getElementById('weightSlider');
             render(slider.value / 100);
