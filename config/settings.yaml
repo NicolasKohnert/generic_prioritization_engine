@@ -1,12 +1,19 @@
 #Prioritization settings
 criteria:
   - name: condition
-    column_name: damage_grade
+    column_name: main_damage
     weight: 0.6
     max: 10.0
+    mapping:
+      4: 10    # Destroyed
+      5: 8     # Possibly destroyed
+      3: 6     # Severely damaged
+      2: 4     # Moderately damaged
+      1: 2     # Possibly damaged
+      7: 0     # No damage visible
     
   - name: criticality
-    column_name: usage_frequency
+    column_name: facility_score
     weight: 0.4
     max: 10.0
     

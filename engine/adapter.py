@@ -15,7 +15,10 @@ def csv_to_json(csv_file_path, criteria):
                     for crit in criteria:
                         column = crit["column_name"]
                         raw = row[column]
-                        values[crit["name"]] = float(raw)
+                        if "mapping" in crit:
+                            values[crit["name"]] = crit["mapping"][int(raw)]
+                        else:
+                            values[crit["name"]] = float(raw)
                         
                     asset = {
                         "id":row["id"],
