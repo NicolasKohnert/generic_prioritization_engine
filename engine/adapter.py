@@ -16,10 +16,14 @@ def csv_to_json(csv_file_path, criteria):
                         column = crit["column_name"]
                         raw = row[column]
                         if "mapping" in crit:
-                            values[crit["name"]] = crit["mapping"][int(raw)]
+                            try:
+                                key = int(raw)
+                            except ValueError:
+                                key = raw
+                            values[crit["name"]] = crit["mapping"][key]
                         else:
                             values[crit["name"]] = float(raw)
-                        
+
                     asset = {
                         "id":row["id"],
                         "name": (row.get("name") or "").strip() or row["id"],
